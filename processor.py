@@ -6,14 +6,10 @@ def condense_spreadsheet(file):
     # Standardize column names
     df.columns = df.columns.str.strip().str.upper()
 
-    # Grouping and aggregation logic
-    condensed = df.groupby(
-        ['ELNOT', 'NOMENCLATURE', 'ALLEGIANCE CODE', 'COUNTRY CODE'],
-        as_index=False
-    ).agg({
-        'QTY ON HAND': 'sum',
-        'CONDITION OPERATIONAL STATUS': lambda x: ', '.join(sorted(set(x.dropna().astype(str)))),
-        'DATE OF REVIEW': 'max'
-    })
+    # Identify grouping columns: all except 'QTY ON HAND'
+    group_cols = [col for col in df.columns if col != 'QTY ON HAND']
+
+    # Group only exact duplicates (all columns except quantity), and sum QTY ON HAND
+    condensed = df.groupby(group_cols, as_index=False)['QTY ON HAND'].sum()
 
     return condensed
