@@ -3,13 +3,16 @@ import pandas as pd
 def condense_spreadsheet(file):
     df = pd.read_excel(file)
 
-    # Standardize column names
+    # Clean column names
     df.columns = df.columns.str.strip().str.upper()
 
-    # Identify grouping columns: all except 'QTY ON HAND'
-    group_cols = [col for col in df.columns if col != 'QTY ON HAND']
+    # Define group columns (exclude QTY ON HAND and DATE OF REVIEW)
+    group_cols = [col for col in df.columns if col not in ['QTY ON HAND', 'DATE OF REVIEW']]
 
-    # Group only exact duplicates (all columns except quantity), and sum QTY ON HAND
-    condensed = df.groupby(group_cols, as_index=False)['QTY ON HAND'].sum()
+    # Aggregate QTY ON HAND and DATE OF REVIEW
+    condensed = df.groupby(group_cols, as_index=False).agg({
+        'QTY ON HAND': 'sum',
+        'DATE OF REVIEW': 'max'
+    })
 
     return condensed
