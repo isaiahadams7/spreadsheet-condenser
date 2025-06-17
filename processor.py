@@ -12,7 +12,7 @@ def condense_spreadsheet(file):
     # Aggregate QTY ON HAND and DATE OF REVIEW
     condensed = df.groupby(group_cols, as_index=False).agg({
         'QTY ON HAND': 'sum',
-        'DATE OF REVIEW': 'max'
+        
     })
 
     return condensed
