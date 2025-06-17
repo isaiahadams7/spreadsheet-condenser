@@ -9,9 +9,17 @@ st.title("📊 Spreadsheet Condenser Tool")
 uploaded_file = st.file_uploader("Upload a spreadsheet (.xlsx)", type=["xlsx"])
 
 if uploaded_file:
-    st.write("✅ File uploaded successfully. Processing...")
+    st.success("✅ File uploaded successfully!")
 
+    st.markdown("⏳ Condensing entries... Please wait a moment.")
     condensed_df = condense_spreadsheet(uploaded_file)
+
+    st.success("🎉 Done! Your spreadsheet has been condensed successfully.")
+    st.markdown(
+        "**What's been done:** Rows with identical data (except for Quantity and Review Date) were combined. "
+        "Quantities were summed, and the most recent review date kept."
+    )
+
     st.dataframe(condensed_df)
 
     # Create downloadable Excel file
